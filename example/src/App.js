@@ -1,10 +1,19 @@
 import React from 'react'
 
-import { ExampleComponent } from 'use-recorder'
+import { Recorder, useRecorder } from 'use-recorder'
 import 'use-recorder/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  const { start, stop, player } = useRecorder()
+  return (
+    <div>
+      <Recorder />
+      <button onClick={start}>start</button>
+      <button onClick={stop}>stop</button>
+      <button onClick={() => player.play()}>play</button>
+      <button onClick={() => player.pause()}>pause</button>
+    </div>
+  )
 }
 
 export default App

@@ -1,7 +1,4 @@
-import * as React from 'react'
-// import styles from './styles.module.css'
-
-// import { useRecorder } from './use-recorder'
+import React from 'react'
 import MicRecorder from 'mic-recorder-to-mp3'
 import compose from 'compose-function'
 
@@ -40,12 +37,12 @@ function setupMic() {
   })
 }
 
-function startRecording(recorder: MicRecorder) {
+function startRecording(recorder) {
   recorder.start()
   return recorder
 }
 
-function attachStopRecording(recorder: MicRecorder) {
+function attachStopRecording(recorder) {
   return () =>
     recorder
       .stop()
@@ -59,13 +56,9 @@ function attachStopRecording(recorder: MicRecorder) {
         const audioPlayer = new Audio(URL.createObjectURL(file))
         return { file, audioPlayer }
       })
-      .catch((error: string) => {
-        console.log(`Something went wrong with the recording ${error}`)
+      .catch((e) => {
+        console.log(`Something went wrong with the recording ${e}`)
       })
 }
 
 const record = compose(attachStopRecording, startRecording, setupMic)
-
-export const Recorder = () => {
-  return <React.Fragment>Only Hook is implemented currently.</React.Fragment>
-}

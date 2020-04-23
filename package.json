@@ -1,9 +1,9 @@
 {
   "name": "use-recorder",
-  "version": "1.0.0",
-  "description": "An audio recorder hook for react apps",
+  "version": "0.0.3",
+  "description": "An Audio and Microphone recorder hook for react apps",
   "author": "orizens",
-  "license": "MIT",
+  "license": "EULA",
   "repository": "orizens/use-recorder",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -53,5 +53,9 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "compose-function": "3.0.3",
+    "mic-recorder-to-mp3": "2.2.1"
+  }
 }
