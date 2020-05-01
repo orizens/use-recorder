@@ -56,3 +56,9 @@ My services include:
 [orizens]: https://cloud.githubusercontent.com/assets/878660/23353771/d0adbd12-fcd6-11e6-96be-7a236f8819d9.png 'Orizens - React And Front End Consulting'
 [see demo here]: https://p1wmc.csb.app/ 'demo recorder app here'
 [source code here]: https://codesandbox.io/s/use-recorder-example-p1wmc 'demo user-recorder hook'
+
+## Publish
+
+publish beta https://gist.github.com/adcreare/00a10f389841dd4c97197608c9b33a7f
+
+`npm publish --tag beta`

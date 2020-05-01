@@ -1,8 +1,6 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react'
-// import styles from './styles.module.css'
-
-// import { useRecorder } from './use-recorder'
-import MicRecorder from 'mic-recorder-to-mp3'
+import { AudioRecorder } from './recorder.utils'
 import compose from 'compose-function'
 
 // NOTE: in Android there's an issue with recording while starting speech recognizing
@@ -12,18 +10,16 @@ const supportsRecordingWithSpeech =
 export function useRecorder() {
   const [audio, setAudio] = React.useState<File>()
   const [player, setPlayer] = React.useState<HTMLAudioElement>()
-  const recorderInstance = React.useRef<MicRecorder>(() => undefined)
+  const recorderInstance = React.useRef<any>(() => undefined)
+  // const { startRecord, stopRecord, recording } = useMic()
 
   const start = () => {
-    if (supportsRecordingWithSpeech) recorderInstance.current = record()
+    recorderInstance.current = AudioRecorder()
   }
 
   const stop = async () => {
-    if (supportsRecordingWithSpeech) {
-      const { file, audioPlayer } = await recorderInstance.current()
-      setAudio(file)
-      setPlayer(audioPlayer)
-    }
+    recorderInstance.current.stopRecord()
+    setPlayer(recorderInstance.current.recording.player)
   }
 
   return {
@@ -34,37 +30,37 @@ export function useRecorder() {
   }
 }
 
-function setupMic() {
-  return new MicRecorder({
-    bitRate: 128
-  })
-}
+// function setupMic() {
+//   return new MicRecorder({
+//     bitRate: 128
+//   })
+// }
 
-function startRecording(recorder: MicRecorder) {
-  recorder.start()
-  return recorder
-}
+// function startRecording(recorder: MicRecorder) {
+//   recorder.start()
+//   return recorder
+// }
 
-function attachStopRecording(recorder: MicRecorder) {
-  return () =>
-    recorder
-      .stop()
-      .getMp3()
-      .then(([buffer, blob]) => {
-        const file = new File(buffer, 'reading.mp3', {
-          type: blob.type,
-          lastModified: Date.now()
-        })
+// function attachStopRecording(recorder: MicRecorder) {
+//   return () =>
+//     recorder
+//       .stop()
+//       .getMp3()
+//       .then(([buffer, blob]) => {
+//         const file = new File(buffer, 'reading.mp3', {
+//           type: blob.type,
+//           lastModified: Date.now()
+//         })
 
-        const audioPlayer = new Audio(URL.createObjectURL(file))
-        return { file, audioPlayer }
-      })
-      .catch((error: string) => {
-        console.log(`Something went wrong with the recording ${error}`)
-      })
-}
+//         const audioPlayer = new Audio(URL.createObjectURL(file))
+//         return { file, audioPlayer }
+//       })
+//       .catch((error: string) => {
+//         console.log(`Something went wrong with the recording ${error}`)
+//       })
+// }
 
-const record = compose(attachStopRecording, startRecording, setupMic)
+// const record = compose(attachStopRecording, startRecording, setupMic)
 
 export const Recorder = () => {
   return <React.Fragment>Only Hook is implemented currently.</React.Fragment>

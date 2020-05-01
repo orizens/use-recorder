@@ -1,0 +1,44 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+/* 
+ adopted from
+ https://bulmatemplates.github.io/bulma-templates/templates/cards.html
+ */
+#flow span {
+  display: block;
+  width: 200vw;
+  height: 200vw;
+  position: absolute;
+  top: -180vw;
+  left: -50vw;
+  border-radius: 90vw;
+  opacity: 0.6;
+}
+.flow-1 {
+  background: #3281ff;
+  animation: rotating 20s linear infinite;
+}
+.flow-2 {
+  background: #f442ee;
+  position: absolute;
+  animation: rotating 15s linear infinite;
+}
+.flow-3 {
+  background: #42eef4;
+  position: absolute;
+  animation: rotating 7s linear infinite;
+}
+
+.rotating {
+  animation: rotating 7s linear infinite;
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
