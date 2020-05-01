@@ -1,60 +1,34 @@
+import compose from 'compose-function'
+
 /* eslint-disable prettier/prettier */
-// import { useRef, useEffect, useState } from 'react'
+const stopRecording = (recorder) => () => proccesAudio(recorder)
+const createPlayerStop = (_stopRecording) => () => {
+  const audio = _stopRecording()
+  return { player: new Audio(audio.audioUrl), audio }
+}
 
-// export function useMic() {
-//   const micRef = useRef<any>()
-//   const recordingRef = useRef<Recording | any>({})
-//   const [recording, setRecording] = useState<RecordingResult>()
-
-//   useEffect(() => {
-//     askForMic().then((stream) => {
-//       micRef.current = stream
-//     })
-//   }, [])
-
-//   const startRecord = () => {
-//     if (recordingRef.current.stop) recordingRef.current.stop()
-//     if (micRef && micRef.current) {
-//       recordingRef.current = setUpRecording(micRef.current)
-//     }
-//   }
-
-//   const stopRecord = () => {
-//     setRecording(proccesAudio(recordingRef.current))
-//   }
-
-//   return {
-//     startRecord,
-//     stopRecord,
-//     recording
-//   }
-// }
+const record = compose(createPlayerStop, stopRecording, setUpRecording)
 
 export function AudioRecorder() {
   const micRef = { current: {} }
-  const recordingRef: any = { current: {} }
-  const recording: any = { current: {} }
-  // const [recording, setRecording] = useState<RecordingResult>()
-
-  askForMic().then((stream: MediaStream) => {
-    micRef.current = stream
-    startRecord()
-  })
+  const recorder: any = { current: {} }
+  const recording: any = {}
 
   const startRecord = () => {
-    // if (recordingRef.current.stop) recordingRef.current.stop()
     if (micRef && micRef.current) {
-      recordingRef.current = setUpRecording(micRef.current)
+      recorder.current = record(micRef.current)
     }
   }
 
   const stopRecord = () => {
-    recording.current = proccesAudio(recordingRef.current)
-    const { audioUrl } = recording.current
-    // const date = Date.now()
-    // const file = new File(buffer, `recording-${date}.wav`)
-    recording.player = new Audio(audioUrl)
+    Object.assign(recording, recorder.current())
   }
+
+  askForMic().then((stream: MediaStream) => {
+    if (!stream) throw new Error('no source to record from')
+    micRef.current = stream
+    startRecord()
+  })
 
   return {
     startRecord,
@@ -64,16 +38,13 @@ export function AudioRecorder() {
 }
 
 function setUpRecording(stream) {
-  const context = new AudioContext()
+  const context = new AudioContext({ sampleRate: 44100 })
   const sampleRate = context.sampleRate
   const stats: any = {
     leftChannel: [],
     rightChannel: [],
     recordingLength: 0
   }
-  // const leftChannel: any[] = []
-  // const rightChannel: any[] = []
-  // let recordingLength = 0
   // creates a gain node
   // const volume = context.createGain()
   // creates an audio node from the microphone incoming stream
@@ -97,8 +68,6 @@ function setUpRecording(stream) {
   recorder.connect(context.destination)
 
   recorder.onaudioprocess = function (e) {
-    // Check
-    // if (!recording) return;
     const left = e.inputBuffer.getChannelData(0)
     const right = e.inputBuffer.getChannelData(1)
     // we clone the samples
@@ -106,9 +75,6 @@ function setUpRecording(stream) {
     stats.rightChannel.push(new Float32Array(right))
     stats.recordingLength += bufferSize
   }
-  // return () => {
-  // stream.getTracks().forEach((track) => track.stop())
-  // context.close()
   return {
     stats,
     sampleRate,
@@ -117,7 +83,6 @@ function setUpRecording(stream) {
       context.close()
     }
   }
-  // }
 }
 
 type Recording = {

@@ -1,6 +1,6 @@
 {
   "name": "use-recorder",
-  "version": "0.0.41-beta.2",
+  "version": "0.0.5",
   "description": "An Audio and Microphone recorder hook for react apps",
   "author": "orizens",
   "license": "EULA",
